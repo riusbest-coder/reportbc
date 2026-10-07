@@ -250,8 +250,7 @@
                     </div>
                 </div>
                 <div class="text-right text-xs text-slate-800">
-                    <p><strong>区域：</strong> 马来/菲律宾/新加坡
-</p>
+                    <p><strong>区域：</strong> 马来/菲律宾/新加坡</p>
                     <p><strong>汇报人：</strong> 何保春</p>
                     <p><strong>报告导出日期：</strong> <span id="printDate"></span></p>
                 </div>
@@ -720,7 +719,7 @@
             modal.classList.toggle('hidden');
         }
 
-        // ==================== XỬ LÝ NHẬP EXCEL (KHỚP FILE 记录EXCEL) ====================
+        // ==================== XỬ LÝ NHẬP EXCEL (CẬP NHẬT TRƯỜNG 偏差说明 / 改进动作) ====================
         function handleExcelImport(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -752,12 +751,16 @@
                                 if (numericRate > 0 && numericRate <= 1 && String(rawRate).includes('.')) {
                                     numericRate = Math.round(numericRate * 100);
                                 }
+
+                                // Sửa lỗi không đọc được trường 偏差说明 / 改进动作 bằng cách kiểm tra linh hoạt tên cột
+                                const descVal = r['偏差说明 / 改进动作'] || r['偏差说明/改进动作'] || r['偏差说明'] || r['改进动作'] || r['desc'] || '';
+
                                 return {
                                     name: String(r['指标名称'] || r['name'] || '').trim(),
                                     target: String(r['目标值'] || r['target'] || '').trim(),
                                     actual: String(r['实际完成值'] || r['actual'] || '').trim(),
                                     rate: isNaN(numericRate) ? 0 : numericRate,
-                                    desc: String(r['偏差说明'] || r['desc'] || '').trim()
+                                    desc: String(descVal).trim()
                                 };
                             }).filter(item => item.name !== '');
                         } 
