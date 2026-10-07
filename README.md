@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -135,12 +136,12 @@
                         <div class="flex items-center space-x-1.5 shrink-0">
                             <i class="fa-solid fa-earth-asia text-brand-blue"></i>
                             <span class="text-slate-500 font-medium">区域：</span>
-                            <span class="font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">越南</span>
+                            <span class="font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">马来/菲律宾/新加坡</span>
                         </div>
                         <div class="flex items-center space-x-1.5 shrink-0">
                             <i class="fa-solid fa-user-tie text-slate-400"></i>
                             <span class="text-slate-500 font-medium">汇报人：</span>
-                            <span class="font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">阮红云</span>
+                            <span class="font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">何保春</span>
                         </div>
                     </div>
                 </div>
@@ -250,8 +251,8 @@
                     </div>
                 </div>
                 <div class="text-right text-xs text-slate-800">
-                    <p><strong>区域：</strong> 越南</p>
-                    <p><strong>汇报人：</strong> 阮红云</p>
+                    <p><strong>区域：</strong> 马来/菲律宾/新加坡</p>
+                    <p><strong>汇报人：</strong> 何保春</p>
                     <p><strong>报告导出日期：</strong> <span id="printDate"></span></p>
                 </div>
             </div>
@@ -719,7 +720,7 @@
             modal.classList.toggle('hidden');
         }
 
-        // ==================== XỬ LÝ NHẬP EXCEL (KHỚP FILE 记录EXCEL) ====================
+        // ==================== XỬ LÝ NHẬP EXCEL (CẬP NHẬT TRƯỜNG 偏差说明 / 改进动作) ====================
         function handleExcelImport(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -751,12 +752,16 @@
                                 if (numericRate > 0 && numericRate <= 1 && String(rawRate).includes('.')) {
                                     numericRate = Math.round(numericRate * 100);
                                 }
+
+                                // Sửa lỗi không đọc được trường 偏差说明 / 改进动作 bằng cách kiểm tra linh hoạt tên cột
+                                const descVal = r['偏差说明 / 改进动作'] || r['偏差说明/改进动作'] || r['偏差说明'] || r['改进动作'] || r['desc'] || '';
+
                                 return {
                                     name: String(r['指标名称'] || r['name'] || '').trim(),
                                     target: String(r['目标值'] || r['target'] || '').trim(),
                                     actual: String(r['实际完成值'] || r['actual'] || '').trim(),
                                     rate: isNaN(numericRate) ? 0 : numericRate,
-                                    desc: String(r['偏差说明'] || r['desc'] || '').trim()
+                                    desc: String(descVal).trim()
                                 };
                             }).filter(item => item.name !== '');
                         } 
